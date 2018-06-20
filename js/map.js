@@ -113,7 +113,8 @@ var makeMapPin = function (mapPinData) {
   for (var i = 0; i < mapPinData.length; i++) {
     var mapPinTemplateClone = mapPinTemplate.cloneNode(true);
 
-    mapPinTemplateClone.style = 'left:' + (mapPinData[i].location.x - 25) + 'px;' + 'top:' + (mapPinData[i].location.y - 70) + 'px;';
+    mapPinTemplateClone.style = 'left:' + (mapPinData[i].location.x - 25) + 'px;' + 'top:'
+      + (mapPinData[i].location.y - 70) + 'px;';
     mapPinTemplateClone.querySelector('img').src = mapPinData[i].author.avatar;
     mapPinTemplateClone.querySelector('img').alt = mapPinData[i].offer.title;
 
