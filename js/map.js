@@ -230,7 +230,7 @@ mapPinSection.appendChild(MapPinContainer);
 
 var cardsContainer = document.createDocumentFragment();
 for (var j = 0; j < 8; j++) {
-  cardsContainer.appendChild(makeCard(testData, i));
+  cardsContainer.appendChild(makeCard(testData, j));
 }
 var cardsSection = document.querySelector('.map');
 cardsSection.insertBefore(cardsContainer, document.querySelector('.map__filters-container'));
