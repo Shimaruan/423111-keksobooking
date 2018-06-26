@@ -137,7 +137,6 @@ var mapPinTemplate = document.querySelector('template')
 
 var makeMapPin = function (pinData) {
   var elementClone = mapPinTemplate.cloneNode(true);
-
   elementClone.style = 'left:' + (pinData.location.x - pinHalfWidth) + 'px;' + 'top:'
       + (pinData.location.y - pinHeight) + 'px;';
   elementClone.querySelector('img').src = pinData.author.avatar;
@@ -169,6 +168,23 @@ var cardTemplate = document.querySelector('template')
       .content
       .querySelector('.map__card');
 
+var makeFeaturesElement = function (className, classNameTwo) {
+  var element = document.createElement('li');
+  element.classList.add(className, classNameTwo)
+  return element;
+};
+
+var makePhotoListImg = function (template, srcData) {
+  var element = document.createElement('img');
+  element.src = srcData;
+  element.classList = template.querySelector('.popup__photo').classList;
+  element.width = template.querySelector('.popup__photo').width;
+  element.height = template.querySelector('.popup__photo').height;
+  element.alt = template.querySelector('.popup__photo').alt;
+
+  return element;
+};
+
 var makeCard = function (cardData) {
   var elementClone = cardTemplate.cloneNode(true);
 
@@ -183,33 +199,17 @@ var makeCard = function (cardData) {
   elementClone.querySelector('.popup__description').textContent = cardData.offer.description;
   elementClone.querySelector('.popup__avatar').src = cardData.author.avatar;
 
-  // список доступных удобств
-  var featuresList = elementClone.querySelector('.popup__features');
-  var initialLength = elementClone.querySelector('.popup__features')
-      .querySelectorAll('.popup__feature').length;
-  var currentlistLength = cardData.offer.features.length;
+  elementClone.querySelector('.popup__photo').src = cardData.offer.photos[0];
+  elementClone.querySelector('.popup__photos').appendChild(makePhotoListImg(elementClone, cardData.offer.photos[1]));
+  elementClone.querySelector('.popup__photos').appendChild(makePhotoListImg(elementClone, cardData.offer.photos[2]));
 
-  for (;initialLength > currentlistLength; initialLength--) {
-    featuresList.removeChild(featuresList.querySelector('.popup__feature:last-child'));
+  for (var i = 0; i < cardData.offer.features.length; i++ ) {
+    elementClone.querySelector('.popup__features').appendChild(
+        makeFeaturesElement('popup__feature','popup__feature--' + cardData.offer.features[i]));
   }
 
-  // добавление фото
-  var photoList = elementClone.querySelector('.popup__photos');
-  var firstChild = elementClone.querySelector('.popup__photo:first-child');
-
-  for (var c = 0; c < cardData.offer.photos.length; c++) {
-    firstChild.src = cardData.offer.photos[c];
-    if (elementClone.querySelectorAll('.popup__photo').length === cardData.offer.photos.length) {
-      break;
-    }
-    firstChild = elementClone.querySelector('.popup__photo:first-child').cloneNode(true);
-    photoList.insertBefore(firstChild, elementClone.querySelector('.popup__photo:first-child'));
-  }
   return elementClone;
 };
 
 var cardsSection = document.querySelector('.map');
-
-for (var k = 0; k < 8; k++) {
-  cardsSection.insertBefore(makeCard(cardsData[k]), document.querySelector('.map__filters-container'));
-}
+cardsSection.insertBefore(makeCard(cardsData[0]), document.querySelector('.map__filters-container'));
