@@ -49,7 +49,6 @@ var cardsDataAmount = 8;
 var cardTemplate = document.querySelector('template').content.querySelector('.map__card');
 var cardsSection = document.querySelector('.map');
 
-
 var pinHalfWidth = 25;
 var pinHeight = 70;
 var pinsAmount = 8;
