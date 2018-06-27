@@ -170,7 +170,7 @@ var cardTemplate = document.querySelector('template')
 
 var makeFeaturesElement = function (className, classNameTwo) {
   var element = document.createElement('li');
-  element.classList.add(className, classNameTwo)
+  element.classList.add(className, classNameTwo);
   return element;
 };
 
@@ -203,9 +203,9 @@ var makeCard = function (cardData) {
   elementClone.querySelector('.popup__photos').appendChild(makePhotoListImg(elementClone, cardData.offer.photos[1]));
   elementClone.querySelector('.popup__photos').appendChild(makePhotoListImg(elementClone, cardData.offer.photos[2]));
 
-  for (var i = 0; i < cardData.offer.features.length; i++ ) {
+  for (var r = 0; r < cardData.offer.features.length; r++) {
     elementClone.querySelector('.popup__features').appendChild(
-        makeFeaturesElement('popup__feature','popup__feature--' + cardData.offer.features[i]));
+        makeFeaturesElement('popup__feature', 'popup__feature--' + cardData.offer.features[r]));
   }
 
   return elementClone;
