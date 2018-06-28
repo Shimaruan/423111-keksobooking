@@ -1,6 +1,6 @@
 'use strict';
 
-var INITIALDATA = {
+var dataStore = {
   TITLE_DATA: [
     'Большая уютная квартира',
     'Маленькая неуютная квартира',
@@ -45,51 +45,58 @@ var housingTypeData = {
 };
 
 var cardsData = [];
-var cardsDataAmount = 8;
-var cardTemplate = document.querySelector('template').content.querySelector('.map__card');
-var cardsSection = document.querySelector('.map');
+var CARDS_DATA_AMOUNT = 8;
+var CARD_TEMPLATE = document.querySelector('template').content.querySelector('.map__card');
+var CARD_SECTION = document.querySelector('.map');
 
-var pinHalfWidth = 25;
-var pinHeight = 70;
-var pinsAmount = 8;
-var pinTemplate = document.querySelector('template').content.querySelector('.map__pin');
-var mapPinSection = document.querySelector('.map__pins');
-var ATRIBUTE_WIDTH = cardTemplate.querySelector('.popup__photo').width;
-var ATRIBUTE_HEIGHT = cardTemplate.querySelector('.popup__photo').height;
-var ATRIBUTE_ALT = cardTemplate.querySelector('.popup__photo').alt;
-var ATRIBUTE_CLASS = cardTemplate.querySelector('.popup__photo').classList;
+var PIN_HALF_WIDTH = 25;
+var PIN_HALF_HEIGHT = 70;
+var PINS_AMOUNT = 8;
+var PIN_TEMPLATE = document.querySelector('template').content.querySelector('.map__pin');
+var MAP_PIN_SECTION = document.querySelector('.map__pins');
+var ATRIBUTE_WIDTH = CARD_TEMPLATE.querySelector('.popup__photo').width;
+var ATRIBUTE_HEIGHT = CARD_TEMPLATE.querySelector('.popup__photo').height;
+var ATRIBUTE_ALT = CARD_TEMPLATE.querySelector('.popup__photo').alt;
+var ATRIBUTE_CLASS = CARD_TEMPLATE.querySelector('.popup__photo').classList;
 
-var mapVisibility = document.querySelector('.map');
+var MAP_VISIBILITY = document.querySelector('.map');
 
+var ROOMS_MIN = 1;
+var ROOMS_MAX = 5;
+var PRICE_MIN = 1000;
+var PRICE_MAX = 1000000;
+var GUESTS_MIN = 1;
+var GUESTS_MAX = 15;
+var MAP_WIDTH_MIN = 300;
+var MAP_WIDTH_MAX = 900;
+var MAP_HEIGHT_MIN = 130;
+var MAP_HEIGHT_MAX = 630;
 
 var makePrice = function () {
-  var price = makeRandomInteger(1000, 1000000);
+  var price = makeRandomInteger(PRICE_MIN, PRICE_MAX);
 
   return price;
 };
 
 var makeRooms = function () {
-  var rooms = makeRandomInteger(1, 5);
+  var rooms = makeRandomInteger(ROOMS_MIN, ROOMS_MAX);
 
   return rooms;
 };
 
 var makeGuests = function () {
-  var guests = makeRandomInteger(1, 15);
+  var guests = makeRandomInteger(GUESTS_MIN, GUESTS_MAX);
 
   return guests;
 };
 
-var makeCoordinateX = function () {
-  var x = makeRandomInteger(300, 900);
+var makeCoordinates = function () {
+  var coordinates ={
+    x: makeRandomInteger(MAP_WIDTH_MIN, MAP_WIDTH_MAX),
+    y: makeRandomInteger(MAP_HEIGHT_MIN, MAP_HEIGHT_MAX)
+  }
 
-  return x;
-};
-
-var makeCoordinateY = function () {
-  var y = makeRandomInteger(130, 630);
-
-  return y;
+  return coordinates;
 };
 
 var makeRandomInteger = function (min, max) {
@@ -109,22 +116,24 @@ var arrayShuffle = function (arrayForShuffle) {
 };
 
 var makeFeatures = function () {
-  var featuresList = INITIALDATA.FEATURES_DATA.slice();
+  var featuresList = dataStore.FEATURES_DATA.slice();
   arrayShuffle(featuresList);
-  featuresList.length = makeRandomInteger(0, INITIALDATA.FEATURES_DATA.length);
+  featuresList.length = makeRandomInteger(0, dataStore.FEATURES_DATA.length);
 
   return featuresList;
 };
 
 var makeShuffledPhotoList = function () {
-  var shuffledArray = INITIALDATA.PHOTO_DATA.slice();
+  var shuffledArray = dataStore.PHOTO_DATA.slice();
   arrayShuffle(shuffledArray);
 
   return shuffledArray;
 };
 
 
-var makeCardData = function (data, count, coordinateX, coordinateY) {
+var makeCardData = function (data, count) {
+  var coordinates = makeCoordinates();
+
   var cardData = {
     author: {
       avatar: 'img/avatars/user0' + (count + 1) + '.png',
@@ -132,7 +141,7 @@ var makeCardData = function (data, count, coordinateX, coordinateY) {
 
     offer: {
       title: data.TITLE_DATA[count],
-      address: coordinateX + ', ' + coordinateY,
+      address: coordinates.x + ', ' + coordinates.y,
       price: makePrice(),
       type: data.TYPE_DATA[makeRandomInteger(0, data.TYPE_DATA.length - 1)],
       rooms: makeRooms(),
@@ -145,8 +154,8 @@ var makeCardData = function (data, count, coordinateX, coordinateY) {
     },
 
     location: {
-      x: coordinateX,
-      y: coordinateY
+      x: coordinates.x,
+      y: coordinates.y
     }
   };
   return cardData;
@@ -155,16 +164,16 @@ var makeCardData = function (data, count, coordinateX, coordinateY) {
 var makeCardsData = function (amount) {
   var array = [];
   for (var i = 0; i < amount; i++) {
-    array.push(makeCardData(INITIALDATA, i, makeCoordinateX(), makeCoordinateY()));
+    array.push(makeCardData(dataStore, i));
   }
   return array;
 };
 
 
 var makePin = function (pinData) {
-  var pin = pinTemplate.cloneNode(true);
-  pin.style.left = pinData.location.x - pinHalfWidth + 'px';
-  pin.style.top = pinData.location.y - pinHeight + 'px';
+  var pin = PIN_TEMPLATE.cloneNode(true);
+  pin.style.left = pinData.location.x - PIN_HALF_WIDTH + 'px';
+  pin.style.top = pinData.location.y - PIN_HALF_HEIGHT + 'px';
   pin.querySelector('img').src = pinData.author.avatar;
   pin.querySelector('img').alt = pinData.author.title;
 
@@ -200,7 +209,7 @@ var makePopupPhoto = function (srcData) {
 };
 
 var makeCard = function (cardData) {
-  var card = cardTemplate.cloneNode(true);
+  var card = CARD_TEMPLATE.cloneNode(true);
 
   card.querySelector('.popup__title').textContent = cardData.offer.title;
   card.querySelector('.popup__text--address').textContent = cardData.offer.address;
@@ -226,10 +235,12 @@ var makeCard = function (cardData) {
 };
 
 
-mapVisibility.classList.remove('map--faded');
+MAP_VISIBILITY.classList.remove('map--faded');
 
-cardsData = makeCardsData(cardsDataAmount);
+cardsData = makeCardsData(CARDS_DATA_AMOUNT);
 
-mapPinSection.appendChild(makePins(pinsAmount));
+MAP_PIN_SECTION.appendChild(makePins(PINS_AMOUNT));
 
-cardsSection.insertBefore(makeCard(cardsData[0]), document.querySelector('.map__filters-container'));
+CARD_SECTION.insertBefore(makeCard(cardsData[0]), document.querySelector('.map__filters-container'));
+
+console.log(cardsData);
