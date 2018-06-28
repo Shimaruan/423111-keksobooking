@@ -91,10 +91,10 @@ var makeGuests = function () {
 };
 
 var makeCoordinates = function () {
-  var coordinates ={
+  var coordinates = {
     x: makeRandomInteger(MAP_WIDTH_MIN, MAP_WIDTH_MAX),
     y: makeRandomInteger(MAP_HEIGHT_MIN, MAP_HEIGHT_MAX)
-  }
+  };
 
   return coordinates;
 };
@@ -242,5 +242,3 @@ cardsData = makeCardsData(CARDS_DATA_AMOUNT);
 MAP_PIN_SECTION.appendChild(makePins(PINS_AMOUNT));
 
 CARD_SECTION.insertBefore(makeCard(cardsData[0]), document.querySelector('.map__filters-container'));
-
-console.log(cardsData);
