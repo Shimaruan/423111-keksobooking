@@ -46,20 +46,20 @@ var housingTypeData = {
 
 var cardsData = [];
 var CARDS_DATA_AMOUNT = 8;
-var CARD_TEMPLATE = document.querySelector('template').content.querySelector('.map__card');
-var CARD_SECTION = document.querySelector('.map');
+var cardTemplate = document.querySelector('template').content.querySelector('.map__card');
+var cardSection = document.querySelector('.map');
 
 var PIN_HALF_WIDTH = 25;
 var PIN_HALF_HEIGHT = 70;
 var PINS_AMOUNT = 8;
-var PIN_TEMPLATE = document.querySelector('template').content.querySelector('.map__pin');
-var MAP_PIN_SECTION = document.querySelector('.map__pins');
-var ATRIBUTE_WIDTH = CARD_TEMPLATE.querySelector('.popup__photo').width;
-var ATRIBUTE_HEIGHT = CARD_TEMPLATE.querySelector('.popup__photo').height;
-var ATRIBUTE_ALT = CARD_TEMPLATE.querySelector('.popup__photo').alt;
-var ATRIBUTE_CLASS = CARD_TEMPLATE.querySelector('.popup__photo').classList;
+var pinTemplate = document.querySelector('template').content.querySelector('.map__pin');
+var mapPinSection = document.querySelector('.map__pins');
+var ATRIBUTE_WIDTH = cardTemplate.querySelector('.popup__photo').width;
+var ATRIBUTE_HEIGHT = cardTemplate.querySelector('.popup__photo').height;
+var ATRIBUTE_ALT = cardTemplate.querySelector('.popup__photo').alt;
+var ATRIBUTE_CLASS = cardTemplate.querySelector('.popup__photo').classList;
 
-var MAP_VISIBILITY = document.querySelector('.map');
+var mapVisibility = document.querySelector('.map');
 
 var ROOMS_MIN = 1;
 var ROOMS_MAX = 5;
@@ -171,7 +171,7 @@ var makeCardsData = function (amount) {
 
 
 var makePin = function (pinData) {
-  var pin = PIN_TEMPLATE.cloneNode(true);
+  var pin = pinTemplate.cloneNode(true);
   pin.style.left = pinData.location.x - PIN_HALF_WIDTH + 'px';
   pin.style.top = pinData.location.y - PIN_HALF_HEIGHT + 'px';
   pin.querySelector('img').src = pinData.author.avatar;
@@ -209,7 +209,7 @@ var makePopupPhoto = function (srcData) {
 };
 
 var makeCard = function (cardData) {
-  var card = CARD_TEMPLATE.cloneNode(true);
+  var card = cardTemplate.cloneNode(true);
 
   card.querySelector('.popup__title').textContent = cardData.offer.title;
   card.querySelector('.popup__text--address').textContent = cardData.offer.address;
@@ -235,10 +235,10 @@ var makeCard = function (cardData) {
 };
 
 
-MAP_VISIBILITY.classList.remove('map--faded');
+mapVisibility.classList.remove('map--faded');
 
 cardsData = makeCardsData(CARDS_DATA_AMOUNT);
 
-MAP_PIN_SECTION.appendChild(makePins(PINS_AMOUNT));
+mapPinSection.appendChild(makePins(PINS_AMOUNT));
 
-CARD_SECTION.insertBefore(makeCard(cardsData[0]), document.querySelector('.map__filters-container'));
+cardSection.insertBefore(makeCard(cardsData[0]), document.querySelector('.map__filters-container'));
