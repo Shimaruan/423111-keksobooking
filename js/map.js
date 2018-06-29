@@ -1,5 +1,22 @@
 'use strict';
 
+var ROOMS_MIN = 1;
+var ROOMS_MAX = 5;
+var PRICE_MIN = 1000;
+var PRICE_MAX = 1000000;
+var GUESTS_MIN = 1;
+var GUESTS_MAX = 15;
+var MAP_WIDTH_MIN = 300;
+var MAP_WIDTH_MAX = 900;
+var MAP_HEIGHT_MIN = 130;
+var MAP_HEIGHT_MAX = 630;
+
+var PIN_HALF_WIDTH = 25;
+var PIN_HEIGHT = 70;
+
+var PINS_AMOUNT = 8;
+var CARDS_DATA_AMOUNT = 8;
+
 var dataStore = {
   TITLE_DATA: [
     'Большая уютная квартира',
@@ -45,32 +62,20 @@ var housingTypeData = {
 };
 
 var cardsData = [];
-var CARDS_DATA_AMOUNT = 8;
 var cardTemplate = document.querySelector('template').content.querySelector('.map__card');
 var cardSection = document.querySelector('.map');
 
-var PIN_HALF_WIDTH = 25;
-var PIN_HALF_HEIGHT = 70;
-var PINS_AMOUNT = 8;
 var pinTemplate = document.querySelector('template').content.querySelector('.map__pin');
 var mapPinSection = document.querySelector('.map__pins');
-var ATRIBUTE_WIDTH = cardTemplate.querySelector('.popup__photo').width;
-var ATRIBUTE_HEIGHT = cardTemplate.querySelector('.popup__photo').height;
-var ATRIBUTE_ALT = cardTemplate.querySelector('.popup__photo').alt;
-var ATRIBUTE_CLASS = cardTemplate.querySelector('.popup__photo').classList;
+
+var popupPhoto = cardTemplate.querySelector('.popup__photo');
+var attributeWidth = popupPhoto.width;
+var attributeHeight = popupPhoto.height;
+var attributeAlt = popupPhoto.alt;
+var attributeClass = popupPhoto.classList;
 
 var mapVisibility = document.querySelector('.map');
 
-var ROOMS_MIN = 1;
-var ROOMS_MAX = 5;
-var PRICE_MIN = 1000;
-var PRICE_MAX = 1000000;
-var GUESTS_MIN = 1;
-var GUESTS_MAX = 15;
-var MAP_WIDTH_MIN = 300;
-var MAP_WIDTH_MAX = 900;
-var MAP_HEIGHT_MIN = 130;
-var MAP_HEIGHT_MAX = 630;
 
 var makePrice = function () {
   var price = makeRandomInteger(PRICE_MIN, PRICE_MAX);
@@ -173,7 +178,7 @@ var makeCardsData = function (amount) {
 var makePin = function (pinData) {
   var pin = pinTemplate.cloneNode(true);
   pin.style.left = pinData.location.x - PIN_HALF_WIDTH + 'px';
-  pin.style.top = pinData.location.y - PIN_HALF_HEIGHT + 'px';
+  pin.style.top = pinData.location.y - PIN_HEIGHT + 'px';
   pin.querySelector('img').src = pinData.author.avatar;
   pin.querySelector('img').alt = pinData.author.title;
 
@@ -200,10 +205,10 @@ var makeFeature = function (modifier) {
 var makePopupPhoto = function (srcData) {
   var element = document.createElement('img');
   element.src = srcData;
-  element.classList = ATRIBUTE_CLASS;
-  element.width = ATRIBUTE_WIDTH;
-  element.height = ATRIBUTE_HEIGHT;
-  element.alt = ATRIBUTE_ALT;
+  element.classList = attributeClass;
+  element.width = attributeWidth;
+  element.height = attributeHeight;
+  element.alt = attributeAlt;
 
   return element;
 };
