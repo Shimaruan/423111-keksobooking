@@ -17,6 +17,8 @@ var PIN_HEIGHT = 70;
 var PINS_AMOUNT = 8;
 var CARDS_DATA_AMOUNT = 8;
 
+var MAIN_PIN_ADDRESS = '602, 407';
+
 var dataStore = {
   TITLE_DATA: [
     'Большая уютная квартира',
@@ -63,7 +65,7 @@ var housingTypeData = {
 
 var cardsData = [];
 var cardTemplate = document.querySelector('template').content.querySelector('.map__card');
-var cardSection = document.querySelector('.map');
+var map = document.querySelector('.map');
 
 var pinTemplate = document.querySelector('template').content.querySelector('.map__pin');
 var mapPinSection = document.querySelector('.map__pins');
@@ -74,7 +76,10 @@ var attributeHeight = popupPhoto.height;
 var attributeAlt = popupPhoto.alt;
 var attributeClass = popupPhoto.classList;
 
-var mapVisibility = document.querySelector('.map');
+var fieldSets = document.querySelectorAll('.ad-form fieldset');
+var mainPin = mapPinSection.querySelector('.map__pin--main');
+var adForm = document.querySelector('.ad-form');
+var inputAddress = adForm.querySelector('#address');
 
 
 var makePrice = function () {
@@ -240,10 +245,48 @@ var makeCard = function (cardData) {
 };
 
 
-mapVisibility.classList.remove('map--faded');
+var fieldSetsAvailability = function (state) {
+  for (var i = 0; i < fieldSets.length; i++) {
+    fieldSets[i].disabled = state;
+  }
+};
+
+var getMapPins = function () {
+  var pinButtons = document.querySelectorAll('.map__pins > [type=button]');
+  return pinButtons;
+};
+
+var closeClickHandler = function () {
+  map.querySelector('.map__card').remove();
+};
+
+var mapPinsClickHandler = function () {
+  map.insertBefore(makeCard(cardsData[0]), document.querySelector('.map__filters-container'));
+
+  var close = document.querySelector('.popup__close');
+  close.addEventListener('click', closeClickHandler);
+};
+
+var addClickEvents = function (element) {
+  for (var i = 0; i < element.length; i++) {
+    element[i].addEventListener('click', mapPinsClickHandler);
+  }
+};
+
+var mainPinMouseUpHandler = function () {
+  map.classList.remove('map--faded');
+  adForm.classList.remove('ad-form--disabled');
+  fieldSetsAvailability(false);
+  inputAddress.value = MAIN_PIN_ADDRESS;
+
+  mapPinSection.appendChild(makePins(PINS_AMOUNT));
+  var mapPins = getMapPins();
+  addClickEvents(mapPins);
+  mainPin.removeEventListener('mouseup', mainPinMouseUpHandler);
+};
+
 
 cardsData = makeCardsData(CARDS_DATA_AMOUNT);
 
-mapPinSection.appendChild(makePins(PINS_AMOUNT));
-
-cardSection.insertBefore(makeCard(cardsData[0]), document.querySelector('.map__filters-container'));
+fieldSetsAvailability(true);
+mainPin.addEventListener('mouseup', mainPinMouseUpHandler);
